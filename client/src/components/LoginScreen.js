@@ -15,6 +15,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import MUIErrorModal from './MUIErrorModal'
+
 
 export default function LoginScreen() {
     const { auth } = useContext(AuthContext);
@@ -26,12 +28,12 @@ export default function LoginScreen() {
             formData.get('email'),
             formData.get('password')
         );
-
     };
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>
             <CssBaseline />
+            <MUIErrorModal />
             <Grid
                 item
                 xs={false}

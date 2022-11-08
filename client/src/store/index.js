@@ -30,6 +30,7 @@ export const GlobalStoreActionType = {
     SET_LIST_NAME_EDIT_ACTIVE: "SET_LIST_NAME_EDIT_ACTIVE",
     EDIT_SONG: "EDIT_SONG",
     REMOVE_SONG: "REMOVE_SONG",
+    ERROR_MODAL: "ERROR_MODAL",
     HIDE_MODALS: "HIDE_MODALS"
 }
 
@@ -40,7 +41,8 @@ const CurrentModal = {
     NONE : "NONE",
     DELETE_LIST : "DELETE_LIST",
     EDIT_SONG : "EDIT_SONG",
-    REMOVE_SONG : "REMOVE_SONG"
+    REMOVE_SONG : "REMOVE_SONG",
+    ERROR_MODAL : "ERROR_MODAL"
 }
 
 // WITH THIS WE'RE MAKING OUR GLOBAL DATA STORE
@@ -56,7 +58,8 @@ function GlobalStoreContextProvider(props) {
         newListCounter: 0,
         listNameActive: false,
         listIdMarkedForDeletion: null,
-        listMarkedForDeletion: null
+        listMarkedForDeletion: null,
+        errorMessage: null
     });
     const history = useHistory();
 
@@ -331,9 +334,28 @@ function GlobalStoreContextProvider(props) {
         store.deleteList(store.listIdMarkedForDeletion);
         store.hideModals();
     }
-    // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
-    // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
 
+    // // THIS FUNCTION OPENS MODAL IF REGISTERING/LOGGING A USER IN HAS ERRORS
+    // store.openErrorModal = async function () {
+    //     const response = await api.loginUser();
+    //     if (response.status === 400) {
+    //         storeReducer({
+    //             type: GlobalStoreActionType.ERROR_MODAL,
+    //             payload: response.data.errorMessage
+    //         });
+    //     }
+    // }
+
+    // // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
+    // // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
+    // store.showErrorModal = (errorMessageRes) => {
+    //     console.log("error messagE:" + errorMessageRes)
+    //     // console.log("status code:" + responseStatus + " error message:" + responseStatus.data.errorMessage)
+    //     storeReducer({
+    //         type: GlobalStoreActionType.ERROR_MODAL,
+    //         payload: {errorMessage: errorMessageRes}
+    //     });
+    // }
     store.showEditSongModal = (songIndex, songToEdit) => {
         storeReducer({
             type: GlobalStoreActionType.EDIT_SONG,
@@ -361,6 +383,9 @@ function GlobalStoreContextProvider(props) {
     store.isRemoveSongModalOpen = () => {
         return store.currentModal === CurrentModal.REMOVE_SONG;
     }
+    // store.isErrorModalOpen = () => {
+    //     return store.currentModal === CurrentModal.ERROR_MODAL;
+    // }
 
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
     // OF A LIST, WHICH INCLUDES DEALING WITH THE TRANSACTION STACK. THE
