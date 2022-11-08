@@ -15,10 +15,7 @@ const style = {
     p: 4,
 };
 export default function MUIErrorModal() {
-    const[show, setShow] = useState(false);
     const { auth } = useContext(AuthContextProvider);
-
-    let modalClass = "modal";
     
     function handleCloseModal() {
         auth.closeErrorModal();

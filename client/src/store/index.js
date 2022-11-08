@@ -59,6 +59,8 @@ function GlobalStoreContextProvider(props) {
         listNameActive: false,
         listIdMarkedForDeletion: null,
         listMarkedForDeletion: null,
+        songMarkedForRemoval: null,
+        songMarkedForEdit: null,
         errorMessage: null
     });
     const history = useHistory();
@@ -183,7 +185,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    songMarkedForEdit: payload.currentSong
                 });
             }
             case GlobalStoreActionType.REMOVE_SONG: {
@@ -196,7 +199,8 @@ function GlobalStoreContextProvider(props) {
                     newListCounter: store.newListCounter,
                     listNameActive: false,
                     listIdMarkedForDeletion: null,
-                    listMarkedForDeletion: null
+                    listMarkedForDeletion: null,
+                    songMarkedForRemoval: payload.currentSong
                 });
             }
             case GlobalStoreActionType.HIDE_MODALS: {
@@ -334,35 +338,15 @@ function GlobalStoreContextProvider(props) {
         store.deleteList(store.listIdMarkedForDeletion);
         store.hideModals();
     }
-
-    // // THIS FUNCTION OPENS MODAL IF REGISTERING/LOGGING A USER IN HAS ERRORS
-    // store.openErrorModal = async function () {
-    //     const response = await api.loginUser();
-    //     if (response.status === 400) {
-    //         storeReducer({
-    //             type: GlobalStoreActionType.ERROR_MODAL,
-    //             payload: response.data.errorMessage
-    //         });
-    //     }
-    // }
-
-    // // THIS FUNCTION SHOWS THE MODAL FOR PROMPTING THE USER
-    // // TO SEE IF THEY REALLY WANT TO DELETE THE LIST
-    // store.showErrorModal = (errorMessageRes) => {
-    //     console.log("error messagE:" + errorMessageRes)
-    //     // console.log("status code:" + responseStatus + " error message:" + responseStatus.data.errorMessage)
-    //     storeReducer({
-    //         type: GlobalStoreActionType.ERROR_MODAL,
-    //         payload: {errorMessage: errorMessageRes}
-    //     });
-    // }
     store.showEditSongModal = (songIndex, songToEdit) => {
+        console.log("edit song modal is opened");
         storeReducer({
             type: GlobalStoreActionType.EDIT_SONG,
             payload: {currentSongIndex: songIndex, currentSong: songToEdit}
         });        
     }
     store.showRemoveSongModal = (songIndex, songToRemove) => {
+        console.log("remove song modal is opened");
         storeReducer({
             type: GlobalStoreActionType.REMOVE_SONG,
             payload: {currentSongIndex: songIndex, currentSong: songToRemove}
@@ -383,9 +367,6 @@ function GlobalStoreContextProvider(props) {
     store.isRemoveSongModalOpen = () => {
         return store.currentModal === CurrentModal.REMOVE_SONG;
     }
-    // store.isErrorModalOpen = () => {
-    //     return store.currentModal === CurrentModal.ERROR_MODAL;
-    // }
 
     // THE FOLLOWING 8 FUNCTIONS ARE FOR COORDINATING THE UPDATING
     // OF A LIST, WHICH INCLUDES DEALING WITH THE TRANSACTION STACK. THE
@@ -415,7 +396,7 @@ function GlobalStoreContextProvider(props) {
     }
     store.addNewSong = function() {
         let index = this.getPlaylistSize();
-        this.addCreateSongTransaction(index, "Untitled", "?", "dQw4w9WgXcQ");
+        this.addCreateSongTransaction(index, "Untitled", "Unknown", "dQw4w9WgXcQ");
     }
     // THIS FUNCTION CREATES A NEW SONG IN THE CURRENT LIST
     // USING THE PROVIDED DATA AND PUTS THIS SONG AT INDEX
